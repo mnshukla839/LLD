@@ -2,12 +2,13 @@ package com.manish.lld.rate_limiter;
 
 public class RateLimiterDemo {
     public static void main(String[] args) throws InterruptedException {
-        RateLimiterStrategy fixedWindowRateLimiter =
-                new FixedWindowRateLimiter(5, 1000);
-        RateLimiter rateLimiter = new RateLimiter(fixedWindowRateLimiter);
+//        RateLimiterStrategy fixedWindowRateLimiter =
+//                new FixedWindowRateLimiter(5, 1000);
+        RateLimiterStrategy tokenBucket = new TokenBucketRateLimiter(5 , 2);
+        RateLimiter rateLimiter = new RateLimiter(tokenBucket);
 
         Runnable task1 = () -> {
-            for (int i = 1; i <= 5; i++) {
+            for (int i = 1; i <= 10; i++) {
                 boolean allowed =
                         rateLimiter.allowRequest("user-123");
                 System.out.println(
@@ -17,9 +18,9 @@ public class RateLimiterDemo {
         };
 
         Runnable task2 = () -> {
-            for (int i = 1; i <= 5; i++) {
+            for (int i = 1; i <= 10; i++) {
                 boolean allowed =
-                        rateLimiter.allowRequest("user-124");
+                        rateLimiter.allowRequest("user-123");
                 System.out.println(
                         "Request from thread 2 " + i + " -> " + allowed
                 );
